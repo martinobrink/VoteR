@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>ASP.NET SignalR</title>
+    <title>VotR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/Content/bootstrap.css" rel="stylesheet" />
@@ -19,58 +19,19 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="brand" href="/">ASP.NET SignalR</a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="/">Samples</a></li>
-                        <li><a href="https://github.com/signalr/signalr">Source Code</a></li>
-                    </ul>
-                </div>
-                <!--/.nav-collapse -->
-            </div>
-        </div>
-    </div>
-    <ul class="breadcrumb">
-        <li><a href="/">SignalR Samples</a> <span class="divider">/</span></li>
-        <li class="active">Connection API</li>
-    </ul>
-    <div class="page-header">
-        <h2>Connection API <small>Low-level connection abstraction</small></h2>
-        <p>
-            Demonstrates all features of the lower-level connection API including starting and stopping, sending and
-            receiving messages, and managing groups.
-        </p>
-    </div>
-    <a href="crossdomain.htm">Cross Domain</a>
-    <h4>To Everybody</h4>
+<body>    
+    <h4>Your name:</h4>
     <form class="form-inline">
         <div class="input-append">
-            <input type="text" id="msg" placeholder="Type a message, name or group" />
-            <input type="button" id="broadcast" class="btn" value="Broadcast" />
-            <input type="button" id="broadcast-exceptme" class="btn" value="Broadcast (All Except Me)" />
-            <input type="button" id="join" class="btn" value="Enter Name" />
-            <input type="button" id="join-group" class="btn" value="Join Group" />
-            <input type="button" id="leave-group" class="btn" value="Leave Group" />
+            <input type="text" id="name" placeholder="Your name" />
+            <input type="button" id="join" class="btn" value="Join" />
         </div>
     </form>
-    <h4>To Me</h4>
+    <h4>Your vote:</h4>
     <form class="form-inline">
         <div class="input-append">
-            <input type="text" id="me" placeholder="Type a message" />
-            <input type="button" id="send" class="btn" value="Send to me" />
-        </div>
-    </form>
-    <h4>Private Message</h4>
-    <form class="form-inline">
-        <div class="input-prepend input-append">
-            <input type="text" name="message" id="message" placeholder="Type a message" />
-            <input type="text" name="user" id="user" placeholder="Type a user or group name" />
-            <input type="button" id="privatemsg" class="btn" value="Send to user" />
-            <input type="button" id="groupmsg" class="btn" value="Send to group" />
+            <input type="text" id="votevalue" placeholder="Your vote" />
+            <input type="button" id="vote" class="btn" value="Vote!" />
         </div>
     </form>
     <button id="stopStart" class="btn btn-info btn-small" disabled="disabled"><i class="icon-stop icon-white"></i> <span>Stop Connection</span></button>
@@ -162,36 +123,12 @@
             };
             start();
 
-            $("#send").click(function () {
-                connection.send({ type: 0, value: $("#me").val() });
-            });
-
-            $("#broadcast").click(function () {
-                connection.send({ type: 1, value: $("#msg").val() });
-            });
-
-            $("#broadcast-exceptme").click(function () {
-                connection.send({ type: 7, value: $("#msg").val() });
-            });
-
             $("#join").click(function () {
-                connection.send({ type: 2, value: $("#msg").val() });
+                connection.send({ type: 0, value: $("#name").val() });
             });
 
-            $("#privatemsg").click(function () {
-                connection.send({ type: 3, value: $("#user").val() + "|" + $("#message").val() });
-            });
-
-            $('#join-group').click(function () {
-                connection.send({ type: 4, value: $("#msg").val() });
-            });
-
-            $('#leave-group').click(function () {
-                connection.send({ type: 5, value: $("#msg").val() });
-            });
-
-            $("#groupmsg").click(function () {
-                connection.send({ type: 6, value: $("#user").val() + "|" + $("#message").val() });
+            $("#vote").click(function () {
+                connection.send({ type: 1, value: $("#votevalue").val() });
             });
 
             $("#stopStart").click(function () {

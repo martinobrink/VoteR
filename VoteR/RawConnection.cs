@@ -5,6 +5,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.HttpFeature;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace VoteR
 {
@@ -12,6 +13,7 @@ namespace VoteR
     {
         private static readonly ConcurrentDictionary<string, string> _users = new ConcurrentDictionary<string, string>();
         private static readonly ConcurrentDictionary<string, string> _clients = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> _votes = new ConcurrentDictionary<string, string>();
 
         protected override async Task OnConnected(HttpRequest request, string connectionId)
         {
@@ -52,63 +54,33 @@ namespace VoteR
 
             switch (message.Type)
             {
-                case MessageType.Broadcast:
-                    Connection.Broadcast(new
-                    {
-                        type = MessageType.Broadcast.ToString(),
-                        from = GetUser(connectionId),
-                        data = message.Value
-                    });
-                    break;
-                case MessageType.BroadcastExceptMe:
-                    Connection.Broadcast(new
-                    {
-                        type = MessageType.Broadcast.ToString(),
-                        from = GetUser(connectionId),
-                        data = message.Value
-                    },
-                    connectionId);
-                    break;
-                case MessageType.Send:
-                    Connection.Send(connectionId, new
-                    {
-                        type = MessageType.Send.ToString(),
-                        from = GetUser(connectionId),
-                        data = message.Value
-                    });
-                    break;
                 case MessageType.Join:
                     string name = message.Value;
                     _clients[connectionId] = name;
                     _users[name] = connectionId;
-                    Connection.Send(connectionId, new
+                    Connection.Broadcast(new
                     {
                         type = MessageType.Join.ToString(),
-                        data = message.Value
+                        name = message.Value
                     });
                     break;
-                case MessageType.PrivateMessage:
-                    var parts = message.Value.Split('|');
-                    string user = parts[0];
-                    string msg = parts[1];
-                    string id = GetClient(user);
-                    Connection.Send(id, new
+                case MessageType.Vote:
+                    _votes[GetUser(connectionId)] = message.Value;
+                    Connection.Broadcast(new
                     {
+                        type = MessageType.Vote.ToString(),
                         from = GetUser(connectionId),
-                        data = msg
+                        vote = message.Value
                     });
-                    break;
-                case MessageType.AddToGroup:
-                    Groups.Add(connectionId, message.Value);
-                    break;
-                case MessageType.RemoveFromGroup:
-                    Groups.Remove(connectionId, message.Value);
-                    break;
-                case MessageType.SendToGroup:
-                    var parts2 = message.Value.Split('|');
-                    string groupName = parts2[0];
-                    string val = parts2[1];
-                    Groups.Send(groupName, val);
+                    if (_votes.Count == _users.Count)
+                    {
+                        Connection.Broadcast(new
+                        {
+                            type = MessageType.VoteResult.ToString(),
+                            result = JsonConvert.SerializeObject(_votes)
+                        });
+                        _votes.Clear();
+                    }
                     break;
                 default:
                     break;
@@ -139,14 +111,9 @@ namespace VoteR
 
         enum MessageType
         {
-            Send,
-            Broadcast,
             Join,
-            PrivateMessage,
-            AddToGroup,
-            RemoveFromGroup,
-            SendToGroup,
-            BroadcastExceptMe,
+            Vote,
+            VoteResult
         }
 
         class Message
