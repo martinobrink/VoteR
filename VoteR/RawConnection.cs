@@ -42,7 +42,7 @@ namespace VoteR
         protected override Task OnDisconnected(HttpRequest request, string connectionId, bool stopCalled)
         {
             string ignored;
-            _users.TryRemove(connectionId, out ignored);
+            _users.TryRemove(GetUser(connectionId), out ignored);
 
             string suffix = stopCalled ? "cleanly" : "uncleanly";
             return Connection.Broadcast(DateTime.Now + ": " + GetUser(connectionId) + " disconnected " + suffix);
