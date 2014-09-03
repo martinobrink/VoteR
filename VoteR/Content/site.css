@@ -1,4 +1,8 @@
-﻿h1 {
+﻿body {
+    padding-left: 10px;
+}
+
+h1 {
     font-weight: normal;
 }
 
@@ -39,4 +43,12 @@
 
 .dl-expanded dt {
     margin-top: 1em;
+}
+
+input#vote {
+    border-width: 0px; 
+    padding: 0px; 
+    width: 62px; 
+    height: 94px; 
+    text-indent:-9999px; /* hides text */
 }

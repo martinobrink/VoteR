@@ -7,13 +7,6 @@
     <link href="/Content/bootstrap.css" rel="stylesheet" />
     <link href="/Content/bootstrap-responsive.css" rel="stylesheet" />
     <link href="/Content/site.css" rel="stylesheet" />
-    <style>
-        body {
-            padding-top: 80px;
-            padding-bottom: 40px;
-            padding-left: 10px;
-        }
-    </style>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -30,11 +23,22 @@
     <h4>Your vote:</h4>
     <form class="form-inline">
         <div class="input-append">
-            <input type="text" id="votevalue" placeholder="Your vote" />
-            <input type="button" id="vote" class="btn" value="Vote!" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_0.png) no-repeat;" value="0" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_0_5.png) no-repeat;" value="0.5" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_1.png) no-repeat;" value="1" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_2.png) no-repeat;" value="2" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_3.png) no-repeat;" value="3" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_5.png) no-repeat;" value="5" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_8.png) no-repeat;" value="8" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_13.png) no-repeat;" value="13" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_20.png) no-repeat;" value="20" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_40.png) no-repeat;" value="40" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_100.png) no-repeat;" value="100" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_question.png) no-repeat;" value="question" />
+            <input type="button" id="vote" class="iconbutton" style="background: url(Content/images/estimate_coffee.png) no-repeat;" value="coffee" />
         </div>
     </form>
-    <button id="stopStart" class="btn btn-info btn-small" disabled="disabled"><i class="icon-stop icon-white"></i> <span>Stop Connection</span></button>
+    <!--<button id="stopStart" class="btn btn-info btn-small" disabled="disabled"><i class="icon-stop icon-white"></i> <span>Stop Connection</span></button>-->
     <h4>Messages</h4>
     <ul id="messages"></ul>
     <script src="/Scripts/jquery-1.8.2.js"></script>
@@ -127,21 +131,21 @@
                 connection.send({ type: 0, value: $("#name").val() });
             });
 
-            $("#vote").click(function () {
-                connection.send({ type: 1, value: $("#votevalue").val() });
+            $('body').on('click', ':input#vote', function () {
+                connection.send({ type: 1, value: $(this).val() });
             });
 
-            $("#stopStart").click(function () {
-                var $el = $(this);
+            //$("#stopStart").click(function () {
+            //    var $el = $(this);
 
-                $el.prop("disabled", true);
+            //    $el.prop("disabled", true);
 
-                if ($.trim($el.find("span").text()) === "Stop Connection") {
-                    connection.stop();
-                } else {
-                    start();
-                }
-            });
+            //    if ($.trim($el.find("span").text()) === "Stop Connection") {
+            //        connection.stop();
+            //    } else {
+            //        start();
+            //    }
+            //});
         });
     </script>
 </body>
